@@ -41,6 +41,7 @@ if(response.size() > 0)//Se a resposta tiver conteúdo
 {
 	QuotedItemsUpdate = list();//faz uma listagem resposta do campo QuotedItemsUpdate do json
 	Quoted_Items = response.getJson("data").get(0).getJson("Quoted_Items");//armazena cada item do array do json
+										//?o que esse get está pegando?
 	msg = null;
 	for each  quoteItem in Quoted_Items//percorre o array
 	{
@@ -89,6 +90,7 @@ if(response.size() > 0)//Se a resposta tiver conteúdo
 			valorST = responseST.get("data").get("valorST");//atribui a variável o valorST da url
 			//netTotalPrecoCaixa = round(netTotalPrecoCaixa,1) + valorST;
 			netTotalPrecoKilo = round(netTotalPrecoKilo,1) + valorST;//arredonda o preço total do kilo e soma com o valorST
+													//? qual a função desse número 1 no arredondamento?
 		}
 		//Preço CX: preço final (ICMS+Frete+Contrato+ST) multiplicado por qtd de cx digitada pelo usuário
 		//netTotalPrecoCaixa = netTotalPrecoCaixa * qtdCaixa;
