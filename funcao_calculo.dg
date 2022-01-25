@@ -162,6 +162,7 @@ responseUpdateOrcamento = invokeurl
 	parameters:param.toString()
 	connection:"zcrm"
 ];
+//com o método PUT, ele atualiza os campos com os novos valores calculados nas últimas funções
 info responseUpdateOrcamento;
 //atualiza montante de negócio
 if(orcamento.get("Deal_Name") != null)
@@ -176,5 +177,5 @@ if(msg != null)
 }
 else
 {
-	return "Tabela de Preço gerada com sucesso!";
+	return "Tabela de Preço gerada com sucesso!";//finaliza a atualização
 }
