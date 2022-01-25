@@ -1,14 +1,14 @@
 //orcamentoId = 5068590000001033619;
-orcamento = zoho.crm.getRecordById("Quotes",orcamentoId.toLong());
-contaId = orcamento.get("Account_Name").get("id");
-conta = zoho.crm.getRecordById("Accounts",contaId);
-canalPorcentagem = {"Varejo":2,"Atacarejo":0,"Distribuidor":-6,"Food Service":-2};
-canal = conta.get("Canal");
-icms = ifnull(conta.get("ICMS"),0);
-frete = ifnull(conta.get("Frete"),0);
+orcamento = zoho.crm.getRecordById("Quotes",orcamentoId.toLong());//retorna o ID registrado no orçamento(a função toLong() recebe uma expressão como argumento e retorna um número)
+contaId = orcamento.get("Account_Name").get("id");//pega o id da conta referente
+conta = zoho.crm.getRecordById("Accounts",contaId);//busca o registro desse ID no CRM
+canalPorcentagem = {"Varejo":2,"Atacarejo":0,"Distribuidor":-6,"Food Service":-2};//associa um valor, dependendo da seleção
+canal = conta.get("Canal");//pega o valor do canal selecionado
+icms = ifnull(conta.get("ICMS"),0);//se o valor for vazio, associa 0 ao ICMS
+frete = ifnull(conta.get("Frete"),0);//se o valor for vazio, associa 0 ao frete
 canalValor = 0;
-ufEntrega = conta.get("UF_Entrega");
-porcentagem369 = toNumber(ifnull(conta.get("field"),0));
+ufEntrega = conta.get("UF_Entrega");//pega a sigla do estado que será feita a entrega
+porcentagem369 = toNumber(ifnull(conta.get("field"),0));//retorna um valor de porcentagem de desconto de acordo com a seleção no campo contrato
 if(porcentagem369 > 0 && porcentagem369 <= 3)
 {
 	porcentagem369 = 3;
@@ -25,96 +25,99 @@ for each  canalKey in canalPorcentagem.keys()
 {
 	if(canalKey == canal)
 	{
-		canalValor = canalPorcentagem.getJson(canal);
+		canalValor = canalPorcentagem.getJson(canal);//
 	}
 }
-response = invokeurl
+
+//cria uma conexão
+response = invokeurl//respose é a variável que contém a resposta retornada
 [
-	url :"https://www.zohoapis.com/crm/v2.1/Quotes/" + orcamentoId
+	url :"https://www.zohoapis.com/crm/v2.1/Quotes/" + orcamentoId//associa o ID do orçamento arredondado e pega as informações que possui nesse orçamento
 	type :GET
-	connection:"zcrm"
+	connection:"zcrm"//representa o nome da conexão
 ];
 //info response;
-if(response.size() > 0)
+if(response.size() > 0)//Se a resposta tiver conteúdo
 {
-	QuotedItemsUpdate = list();
-	Quoted_Items = response.getJson("data").get(0).getJson("Quoted_Items");
+	QuotedItemsUpdate = list();//faz uma listagem resposta do campo QuotedItemsUpdate do json
+	Quoted_Items = response.getJson("data").get(0).getJson("Quoted_Items");//armazena cada item do array do json
 	msg = null;
-	for each  quoteItem in Quoted_Items
+	for each  quoteItem in Quoted_Items//percorre o array
 	{
-		mapQuotedItems = Map();
-		produtoId = quoteItem.get("Product_Name").get("id");
-		produtoInfo = zoho.crm.getRecordById("Products",produtoId);
-		precoCaixa = produtoInfo.get("Pre_o_caixa");
-		precoKilo = produtoInfo.get("Unit_Price");
+		mapQuotedItems = Map();//mapeia os campos para retornar um novo array
+		produtoId = quoteItem.get("Product_Name").get("id");//pega o id do produto referente
+		produtoInfo = zoho.crm.getRecordById("Products",produtoId);//busca o registro desse ID no CRM
+		precoCaixa = produtoInfo.get("Pre_o_caixa");//pega o valor da caixaa unitária
+		precoKilo = produtoInfo.get("Unit_Price");//pega o valor do kilo
 		//fluxo caixa
 		//netTotalPrecoCaixa = 0;
 		netTotalPrecoKilo = 0;
 		if(canalValor != 0)
 		{
 			//netTotalPrecoCaixa = netTotalPrecoCaixa + round(canalValor * precoCaixa / 100,1);
-			netTotalPrecoKilo = netTotalPrecoKilo + round(canalValor * precoKilo / 100,1);
+			netTotalPrecoKilo = netTotalPrecoKilo + round(canalValor * precoKilo / 100,1);//o preço total do kilo será de acordo com o canal escolhido no formulário
 		}
 		//precoBaseCaixa = netTotalPrecoCaixa + precoCaixa;
 		precoBaseKilo = netTotalPrecoKilo + precoKilo;
-		//
+
 		//netTotalPrecoCaixa = precoBaseCaixa;
 		netTotalPrecoKilo = precoBaseKilo;
 		if(porcentagem369 != 0)
 		{
 			//netTotalPrecoCaixa = round(precoBaseCaixa / (1 - 1 / 100 * porcentagem369),1);
-			netTotalPrecoKilo = round(precoBaseKilo / (1 - 1 / 100 * porcentagem369),1);
+			netTotalPrecoKilo = round(precoBaseKilo / (1 - 1 / 100 * porcentagem369),1);//atribui um novo total ao preço do kilo de acordo com o valor da porcentagem
 		}
 		if(icms != 0)
 		{
 			//netTotalPrecoCaixa = round(precoBaseCaixa / (1 - 1 / 100 * icms),1);
-			netTotalPrecoKilo = round(precoBaseKilo / (1 - 1 / 100 * icms),1);
+			netTotalPrecoKilo = round(precoBaseKilo / (1 - 1 / 100 * icms),1);//atribui um novo total ao preço do kilo de acordo com o valor do icms
 		}
 		//netTotalPrecoCaixa = netTotalPrecoCaixa + frete;
-		netTotalPrecoKilo = netTotalPrecoKilo + frete;
+		netTotalPrecoKilo = netTotalPrecoKilo + frete;//soma o valor total do kilo com o frete
 		//lógica ST
-		responseST = invokeurl
+
+		responseST = invokeurl//cria uma nova conexão
 		[
 			url :"https://www.zohoapis.com/crm/v2/functions/calculost/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&uf=" + ufEntrega + "&produtoId=" + produtoId
 			type :GET
 		];
 		valorComST = 0;
 		valorST = 0;
-		responseST = responseST.getJson("details").getJson("userMessage").get(0);
-		if(responseST.get("success"))
+		responseST = responseST.getJson("details").getJson("userMessage").get(0);//pega os campos "details" e "userMessage" do json, e atribui a variável
+		if(responseST.get("success"))//se os valores retornarem resultados positivos
 		{
-			valorST = responseST.get("data").get("valorST");
+			valorST = responseST.get("data").get("valorST");//atribui a variável o valorST da url
 			//netTotalPrecoCaixa = round(netTotalPrecoCaixa,1) + valorST;
-			netTotalPrecoKilo = round(netTotalPrecoKilo,1) + valorST;
+			netTotalPrecoKilo = round(netTotalPrecoKilo,1) + valorST;//arredonda o preço total do kilo e soma com o valorST
 		}
 		//Preço CX: preço final (ICMS+Frete+Contrato+ST) multiplicado por qtd de cx digitada pelo usuário
 		//netTotalPrecoCaixa = netTotalPrecoCaixa * qtdCaixa;
 		//Preço KG: preço final (ICMS+Frete+Contrato+ST) para kg
-		kiloPorCaixa = produtoInfo.get("Peso_caixaa");
-		qtdCaixa = quoteItem.get("Qnt_Caixas");
-		qtdKilo = quoteItem.get("Qnt_Kg");
-		fluxoCaixa = if(qtdCaixa > 0 && qtdCaixa != null && qtdKilo == null,true,false);
+		kiloPorCaixa = produtoInfo.get("Peso_caixaa");//o valor do kilo é gerado de acordo com o peso da caixa
+		qtdCaixa = quoteItem.get("Qnt_Caixas");//a quantidade de caixas é fornecida de acordo com quantos resultados foram percorridos no array
+		qtdKilo = quoteItem.get("Qnt_Kg");//a quantidade de kilos é fornecida de acordo com quantos resultados foram percorridos no array
+		fluxoCaixa = if(qtdCaixa > 0 && qtdCaixa != null && qtdKilo == null,true,false);//a função continua se os valores não forem nulos
 		fluxoKilo = if(qtdKilo > 0 && qtdKilo != null && qtdCaixa == null,true,false);
 		if(fluxoCaixa)
 		{
-			netTotalPrecoKilo = kiloPorCaixa * qtdCaixa * netTotalPrecoKilo;
-			netTotalPrecoKilo = round(netTotalPrecoKilo,1);
-			mapQuotedItems.put("Qnt_Caixas",qtdCaixa);
-			mapQuotedItems.put("Qnt_Kg",kiloPorCaixa * qtdCaixa);
-			mapQuotedItems.put("Pre_o_Unit_rio",netTotalPrecoKilo);
+			netTotalPrecoKilo = kiloPorCaixa * qtdCaixa * netTotalPrecoKilo;//novo valor para o total do preço do kilo
+			netTotalPrecoKilo = round(netTotalPrecoKilo,1);//arredondando o valor
+			mapQuotedItems.put("Qnt_Caixas",qtdCaixa);//novo valor da quantidade de caixas adicionado ao novo array que o map criou
+			mapQuotedItems.put("Qnt_Kg",kiloPorCaixa * qtdCaixa);//novo valor da quantidade de kilo por caixas adicionado ao novo array que o map criou
+			mapQuotedItems.put("Pre_o_Unit_rio",netTotalPrecoKilo);//novo valor de preço de unitário adicionado ao novo array que o map criou
 		}
 		else if(fluxoKilo || qtdCaixa == 0)
 		{
-			tempQtdCaixa = (qtdKilo / kiloPorCaixa).floor();
+			tempQtdCaixa = (qtdKilo / kiloPorCaixa).floor();//divide os valores de quantidade e kilo e retorna o menor inteiro mais próximo do valor fornecido
 			if(tempQtdCaixa <= 0)
 			{
 				//error
-				msg = if(msg == null,"Peso CX inválido! Nome Produto: " + quoteItem.get("Product_Name").get("name"),msg + ", " + quoteItem.get("Product_Name").get("name"));
-				mapQuotedItems.put("Qnt_Caixas",0);
+				msg = if(msg == null,"Peso CX inválido! Nome Produto: " + quoteItem.get("Product_Name").get("name"),msg + ", " + quoteItem.get("Product_Name").get("name"));//retorna mensagem de erro se os valores finais forem menores ou iguais a zero
+				mapQuotedItems.put("Qnt_Caixas",0);//atribui novo valor como zero para quantidade de caixas
 				mapQuotedItems.put("Qnt_Kg",qtdKilo);
-				mapQuotedItems.put("Pre_o_Unit_rio",0);
+				mapQuotedItems.put("Pre_o_Unit_rio",0);//atribui novo valor como zero o preço unitário
 			}
-			else if(tempQtdCaixa > 0)
+			else if(tempQtdCaixa > 0)//novos valores são atribuidos
 			{
 				netTotalPrecoKilo = kiloPorCaixa * tempQtdCaixa * netTotalPrecoKilo;
 				netTotalPrecoKilo = round(netTotalPrecoKilo,1);
@@ -123,22 +126,22 @@ if(response.size() > 0)
 				mapQuotedItems.put("Pre_o_Unit_rio",netTotalPrecoKilo);
 			}
 		}
-		else
+		else//valores pré definidos são inseridos ao novo array do map
 		{
 			mapQuotedItems.put("Qnt_Caixas",qtdCaixa);
 			mapQuotedItems.put("Qnt_Kg",qtdKilo);
 			mapQuotedItems.put("Pre_o_Unit_rio",quoteItem.get("Pre_o_Unit_rio"));
 		}
-		//monta item orçamento
+		//monta item com todos os valores calculados para o orçamento
 		mapQuotedItems.put("Product_Name",quoteItem.get("Product_Name"));
 		//mapQuotedItems.put("Pre_o_caixa",netTotalPrecoCaixa);
 		//mapQuotedItems.put("Total1",quoteItem.get("Total1"));
 		mapQuotedItems.put("Discount",quoteItem.get("Discount"));
 		mapQuotedItems.put("Description",quoteItem.get("Description"));
-		QuotedItemsUpdate.add(mapQuotedItems);
+		QuotedItemsUpdate.add(mapQuotedItems);//adiciona ao array original do json
 	}
 }
-//update item cotação
+//lista gerada caso o valores não necessitem de cotação/o usuário preferir seguir dessa forma
 data1 = Map();
 data1.put("id",orcamentoId);
 data1.put("Quoted_Items",QuotedItemsUpdate);
@@ -150,6 +153,8 @@ dataList = List();
 dataList.add(data1);
 param = Map();
 param.put("data",dataList);
+
+//nova conexão
 responseUpdateOrcamento = invokeurl
 [
 	url :"https://www.zohoapis.com/crm/v2.1/Quotes"
@@ -161,7 +166,7 @@ info responseUpdateOrcamento;
 //atualiza montante de negócio
 if(orcamento.get("Deal_Name") != null)
 {
-	dealId = orcamento.get("Deal_Name").get("id");
+	dealId = orcamento.get("Deal_Name").get("id");//
 	//zoho.crm.updateRecord("Deals",dealId,{"Amount":totalGeral});
 }
 //info responseUpdateOrcamento;
