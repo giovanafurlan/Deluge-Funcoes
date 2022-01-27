@@ -1,0 +1,27 @@
+//leadID= 4501870000000084805;
+lead = zoho.crm.getRecordById("Leads",leadID);
+idsfconta = lead.get("subform");
+//info idsfconta;
+idCliente = lead.get("id");
+//info idCliente;
+lista = list();
+for each  item in idsfconta
+{
+	//info item;
+	contaSubForm = item.get("Conta");
+}
+//info contaSubForm;
+idConta = contaSubForm.get("id");
+//info idConta;
+conta = zoho.crm.getRecordById("Accounts",idConta);
+siteConta = conta.get("Account_Site");
+//info siteConta;
+siteCliente = lead.get("Conta_Site");
+//info siteCliente;
+mp = Map();
+
+//mp.put(siteCliente,siteConta);
+update = zoho.crm.updateRecord("Leads",idConta,mp);
+info update;
+
+//{"code":"INVALID_DATA","details":{},"message":"the id given seems to be invalid","status":"error"}
