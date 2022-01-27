@@ -1,0 +1,20 @@
+// 4501870000000088859 lead
+// 4501870000000087647 account
+// 4501870000000037814 contact
+lead = zoho.crm.getRecordById("Leads",leadId);
+mpcontact = Map();
+mpcontact.put("First_Name",lead.get("First_Name"));
+mpcontact.put("Last_Name",lead.get("Last_Name"));
+mpcontact.put("Phone",lead.get("Phone"));
+mpcontact.put("Mobile",lead.get("Mobile"));
+mpcontact.put("Email",lead.get("Email"));
+//info mpcontact;
+mpconta = Map();
+mpconta.put("Account_Name",lead.get("First_Name"));
+mpconta.put("Phone",lead.get("Phone"));
+//info mpconta;
+criarcontato = zoho.crm.createRecord("Contacts",mpcontact);
+info criarcontato;
+criarconta = zoho.crm.createRecord("Accounts",mpconta);
+info criarconta;
+return "Registro criado com sucesso";

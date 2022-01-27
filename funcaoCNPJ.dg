@@ -1,0 +1,23 @@
+//4501870000000090033
+conta = zoho.crm.getRecordById("Accounts",contaId);
+cnpj = conta.get("CNPJ");
+consulta = invokeurl
+[
+	url :"https://api.cnpja.com/office/" + cnpj
+	type :GET
+	headers:{'Authorization':"789c6217-c7ee-4568-a326-7b45df3f2342-429a2d0a-455a-491a-b48a-4103493e22c9"}
+];
+endereco = consulta.get("address");
+pais = endereco.get("country");
+empresa = consulta.get("company");
+mp = Map();
+mp.put("Account_Name",empresa.get("name"));
+mp.put("Billing_Country",pais.get("name"));
+mp.put("Billing_State",endereco.get("state"));
+mp.put("Billing_Street",endereco.get("street"));
+mp.put("Billing_City",endereco.get("city"));
+atualizaendereco = zoho.crm.updateRecord("Accounts",contaId,mp);
+//criaendereco = zoho.crm.updateRecord("Accounts", contaId, mp);
+info atualizaendereco;
+//info criarendereco;
+return "";

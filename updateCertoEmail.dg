@@ -1,0 +1,16 @@
+//4501870000000084805 leadId
+client = zoho.crm.getRecordById("Leads",leadID);
+subAccount = client.get("subform");
+for each item in subAccount
+{
+    cliente = item.get("Conta");
+	clienteId= cliente.get("id");
+}
+contaInfo = zoho.crm.getRecordById("Accounts",clienteId);
+contaSite = contaInfo.get("Account_Site");
+mp = Map();
+mp.put("Account_Site",contaInfo.get("Account_Site"));
+updateSub = zoho.crm.updateRecord("Leads",leadID,mp);
+info updateSub;
+
+//{"Modified_Time":"2022-01-27T14:50:53-03:00","Modified_By":{"name":"Giovana Furlan","id":"4501870000000084001"},"Created_Time":"2022-01-19T10:40:41-03:00","id":"4501870000000084805","Created_By":{"name":"Giovana Furlan","id":"4501870000000084001"}}
