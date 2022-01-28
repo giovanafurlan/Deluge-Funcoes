@@ -1,72 +1,72 @@
 {
-    "Owner":{
-       "name":"Giovana Furlan",
-       "id":"4501870000000084001",
-       "email":"giovana.furlan@webpeak.com.br"
-    },
-    "Ownership":null,
-    "Description":null,
-    "$currency_symbol":"R$",
-    "Account_Type":null,
-    "Rating":null,
-    "SIC_Code":null,
-    "Shipping_State":null,
-    "$review_process":{
-       "approve":false,
-       "reject":false,
-       "resubmit":false
-    },
-    "Website":null,
-    "Employees":null,
-    "Last_Activity_Time":null,
-    "Industry":null,
-    "Record_Image":null,
-    "Modified_By":{
-       "name":"Giovana Furlan",
-       "id":"4501870000000084001",
-       "email":"giovana.furlan@webpeak.com.br"
-    },
-    "$review":null,
-    "Account_Site":"www.site.com.br",
-    "$state":"save",
-    "$process_flow":false,
-    "Phone":null,
-    "Billing_Country":null,
-    "Account_Name":"Webpeak",
-    "id":"4501870000000088757",
-    "Account_Number":"0",
-    "$approved":true,
-    "Ticker_Symbol":null,
-    "$approval":{
-       "delegate":false,
-       "approve":false,
-       "reject":false,
-       "resubmit":false
-    },
-    "Modified_Time":"2022-01-27T14:49:56-03:00",
-    "Billing_Street":null,
-    "Created_Time":"2022-01-27T14:49:56-03:00",
-    "$editable":true,
-    "Billing_Code":null,
-    "$orchestration":false,
-    "Parent_Account":null,
-    "Shipping_City":null,
-    "Shipping_Country":null,
-    "Shipping_Code":null,
-    "Billing_City":null,
-    "$in_merge":false,
-    "Billing_State":null,
-    "CNPJ":null,
-    "Created_By":{
-       "name":"Giovana Furlan",
-       "id":"4501870000000084001",
-       "email":"giovana.furlan@webpeak.com.br"
-    },
-    "Tag":[
-       
-    ],
-    "Fax":null,
-    "Annual_Revenue":null,
-    "$approval_state":"approved",
-    "Shipping_Street":null
+   "Owner": {
+      "name": "Giovana Furlan",
+      "id": "4501870000000084001",
+      "email": "giovana.furlan@webpeak.com.br"
+   },
+   "Ownership": null,
+   "Description": null,
+   "$currency_symbol": "R$",
+   "Account_Type": null,
+   "Rating": null,
+   "SIC_Code": null,
+   "Shipping_State": null,
+   "$review_process": {
+      "approve": false,
+      "reject": false,
+      "resubmit": false
+   },
+   "Website": null,
+   "Employees": null,
+   "Last_Activity_Time": null,
+   "Industry": null,
+   "Record_Image": null,
+   "Modified_By": {
+      "name": "Giovana Furlan",
+      "id": "4501870000000084001",
+      "email": "giovana.furlan@webpeak.com.br"
+   },
+   "$review": null,
+   "Account_Site": "www.site.com.br",
+   "$state": "save",
+   "$process_flow": false,
+   "Phone": null,
+   "Billing_Country": null,
+   "Account_Name": "Webpeak",
+   "id": "4501870000000088757",
+   "Account_Number": "0",
+   "$approved": true,
+   "Ticker_Symbol": null,
+   "$approval": {
+      "delegate": false,
+      "approve": false,
+      "reject": false,
+      "resubmit": false
+   },
+   "Modified_Time": "2022-01-27T14:49:56-03:00",
+   "Billing_Street": null,
+   "Created_Time": "2022-01-27T14:49:56-03:00",
+   "$editable": true,
+   "Billing_Code": null,
+   "$orchestration": false,
+   "Parent_Account": null,
+   "Shipping_City": null,
+   "Shipping_Country": null,
+   "Shipping_Code": null,
+   "Billing_City": null,
+   "$in_merge": false,
+   "Billing_State": null,
+   "CNPJ": null,
+   "Created_By": {
+      "name": "Giovana Furlan",
+      "id": "4501870000000084001",
+      "email": "giovana.furlan@webpeak.com.br"
+   },
+   "Tag": [
+
+   ],
+   "Fax": null,
+   "Annual_Revenue": null,
+   "$approval_state": "approved",
+   "Shipping_Street": null
 }
