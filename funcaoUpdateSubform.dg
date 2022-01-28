@@ -1,4 +1,4 @@
-//leadID= 4501870000000092467;
+//leadID= 4501870000000092759;
 lead = zoho.crm.getRecordById("Leads",leadID.toLong());
 //busca o subfrom de lead
 subAccount = lead.get("subform");
@@ -14,10 +14,11 @@ for each  item in subAccount
 	contaInfo = zoho.crm.getRecordById("Accounts",clienteId);
 	//busca a info site em account
 	contaSite = contaInfo.get("Account_Site");
+	//contaNome= contaInfo.get("Account_Name");
 	//monta o objeto de subform com a info do site
 	mp = Map();
 	mp.put("Conta_Site",contaSite);
-	mp.put("Lead",clienteId);
+	mp.put("Conta",clienteId);
 	//add o objeto no array
 	newSubform.add(mp);
 }
