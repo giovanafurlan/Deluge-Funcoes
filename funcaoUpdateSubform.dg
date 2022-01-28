@@ -1,0 +1,28 @@
+//leadID= 4501870000000092467;
+lead = zoho.crm.getRecordById("Leads",leadID.toLong());
+//busca o subfrom de lead
+subAccount = lead.get("subform");
+newSubform = list();
+//roda um loop no subform de lead
+for each  item in subAccount
+{
+	//busca o id account no subform de lead
+	customerAccount = item.get("Conta");
+	info customerAccount;
+	clienteId = customerAccount.get("id");
+	//com o id do account vai no módulo de account
+	contaInfo = zoho.crm.getRecordById("Accounts",clienteId);
+	//busca a info site em account
+	contaSite = contaInfo.get("Account_Site");
+	//monta o objeto de subform com a info do site
+	mp = Map();
+	mp.put("Conta_Site",contaSite);
+	mp.put("Lead",clienteId);
+	//add o objeto no array
+	newSubform.add(mp);
+}
+//monta a estrutura {"nome subform":[{"chave":valor,"chave":valor},{"chave":valor,"chave":valor}]};
+mpSubform = Map();
+mpSubform.put("subform",newSubform);
+updateSub = zoho.crm.updateRecord("Leads",leadID,mpSubform);
+info updateSub;
