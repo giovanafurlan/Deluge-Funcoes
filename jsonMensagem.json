@@ -1,0 +1,53 @@
+{
+    "msg":"Olá a todos",
+    "Owner":{
+       "name":"Giovana Furlan",
+       "id":"4501870000000084001",
+       "email":"giovana.furlan@webpeak.com.br"
+    },
+    "$currency_symbol":"R$",
+    "$review_process":{
+       "approve":false,
+       "reject":false,
+       "resubmit":false
+    },
+    "Name":"msg1",
+    "Last_Activity_Time":null,
+    "Record_Image":null,
+    "Modified_By":{
+       "name":"Giovana Furlan",
+       "id":"4501870000000084001",
+       "email":"giovana.furlan@webpeak.com.br"
+    },
+    "$review":null,
+    "$state":"save",
+    "Unsubscribed_Mode":null,
+    "$process_flow":false,
+    "id":"4501870000000095194",
+    "$approved":true,
+    "$approval":{
+       "delegate":false,
+       "approve":false,
+       "reject":false,
+       "resubmit":false
+    },
+    "Modified_Time":"2022-01-31T10:46:39-03:00",
+    "Created_Time":"2022-01-31T10:46:39-03:00",
+    "Unsubscribed_Time":null,
+    "$editable":true,
+    "$orchestration":false,
+    "Contato_Relacionado":{
+       "name":"Giovana Furlan",
+       "id":"4501870000000091396"
+    },
+    "$in_merge":false,
+    "Created_By":{
+       "name":"Giovana Furlan",
+       "id":"4501870000000084001",
+       "email":"giovana.furlan@webpeak.com.br"
+    },
+    "Tag":[
+       
+    ],
+    "$approval_state":"approved"
+ }
