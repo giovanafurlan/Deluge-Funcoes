@@ -1,0 +1,264 @@
+//contaId = 5068590000001561054;
+conta = zoho.crm.getRecordById("Accounts",contaId);
+statusIntegracao = conta.get("Status");
+if(statusIntegracao != "200")
+{
+	//preparação dos dados
+	contatoPrincipal = conta.get("Nome_Contato");
+	if(contatoPrincipal != null)
+	{
+		contaPrincipal = zoho.crm.getRecordById("Contacts",conta.get("Nome_Contato").get("id"));
+		contato = contaPrincipal.get("First_Name") + " " + contaPrincipal.get("Last_Name");
+		//tratar caracter especial
+		contatoNome = zoho.encryption.base64Encode(contato);
+		responseContato = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + contatoNome
+			type :GET
+		];
+		responseContato = responseContato.getJson("details").getJson("userMessage").get(0);
+		contato = if(responseContato.len() > 40,responseContato.substring(0,15),responseContato);
+	}
+	else
+	{
+		contato = "";
+	}
+	//trata caracter especial
+	accountName = zoho.encryption.base64Encode(conta.get("Account_Name"));
+	responseRazaoSocial = invokeurl
+	[
+		url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + accountName
+		type :GET
+	];
+	responseRazaoSocial = responseRazaoSocial.getJson("details").getJson("userMessage").get(0);
+	razaosocial = ifnull(responseRazaoSocial,"");
+	razaosocial = if(razaosocial.len() > 40,razaosocial.substring(0,40),razaosocial);
+	tppessoa = ifnull(conta.get("Fisica_Jurid"),"");
+	//tratar caracter especial
+	nreduzido = ifnull(conta.get("N_Fantasia"),"");
+	if(nreduzido != "")
+	{
+		nreduzido = zoho.encryption.base64Encode(nreduzido);
+		responseNReduzido = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + nreduzido
+			type :GET
+		];
+		nreduzido = responseNReduzido.getJson("details").getJson("userMessage").get(0);
+	}
+	nreduzido = if(nreduzido.len() > 40,nreduzido.substring(0,40),nreduzido);
+	codrede = "";
+	rede = "";
+	endereco = ifnull(conta.get("Endereco_do_cliente"),"");
+	if(conta.get("Numero_do_Cliente") != null)
+	{
+		endereco = conta.get("Endereco_do_cliente") + "," + conta.get("Numero_do_Cliente");
+	}
+	if(conta.get("Complemento_do_Cliente") != null)
+	{
+		endereco = endereco + " - " + conta.get("Complemento_do_Cliente");
+	}
+	//tratar caracter especial
+	if(endereco != "")
+	{
+		endereco = zoho.encryption.base64Encode(endereco);
+		responseEndereco = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + endereco
+			type :GET
+		];
+		endereco = responseEndereco.getJson("details").getJson("userMessage").get(0);
+	}
+	endereco = if(endereco.len() > 40,endereco.substring(0,40),endereco);
+	tipocliente = ifnull(conta.get("Tipo"),"");
+	estado = ifnull(conta.get("UF_Cliente"),"");
+	municipio = ifnull(conta.get("Municipio_do_cliente"),"");
+	//tratar caracter especial
+	if(municipio != null)
+	{
+		municipio = zoho.encryption.base64Encode(municipio);
+		responseMunicipio = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + municipio
+			type :GET
+		];
+		municipio = responseMunicipio.getJson("details").getJson("userMessage").get(0);
+	}
+	municipio = if(municipio.len() > 40,municipio.substring(0,40),municipio);
+	ddd = ifnull(conta.get("DDD"),"");
+	bairro = ifnull(conta.get("Bairro_do_cliente"),"");
+	//tratar caracter especial
+	if(bairro != null)
+	{
+		bairro = zoho.encryption.base64Encode(bairro);
+		responseBairro = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + bairro
+			type :GET
+		];
+		bairro = responseBairro.getJson("details").getJson("userMessage").get(0);
+	}
+	bairro = if(bairro.len() > 40,bairro.substring(0,40),bairro);
+	cep = "";
+	if(conta.get("Cep_do_Cliente") != null)
+	{
+		cep = ifnull(conta.get("Cep_do_Cliente").replaceAll("[^a-zA-Z0-9]",""),"");
+	}
+	telefone = "";
+	if(!conta.get("Phone").isEmpty())
+	{
+		telefone = ifnull(conta.get("Phone").replaceAll("[a-zA-Z]",""),"");
+		telefone = if(telefone.len() > 15,telefone.toString().substring(0,15),telefone);
+	}
+	endcob = ifnull(conta.get("Billing_Street"),"");
+	if(conta.get("Numero_de_Cobran_a") != null)
+	{
+		endcob = conta.get("Billing_Street") + "," + conta.get("Numero_de_Cobran_a");
+	}
+	if(conta.get("Complemento_de_Cobran_a") != null)
+	{
+		endcob = endcob + " - " + conta.get("Complemento_de_Cobran_a");
+	}
+	//tratar caracter especial
+	if(endcob != "")
+	{
+		endcob = zoho.encryption.base64Encode(endcob);
+		responseEndCob = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + endcob
+			type :GET
+		];
+		endcob = responseEndCob.getJson("details").getJson("userMessage").get(0);
+	}
+	endcob = if(endcob.len() > 40,endcob.substring(0,40),endcob);
+	endentrega = ifnull(conta.get("Shipping_Street"),"");
+	if(conta.get("Numero_de_Entrega") != null)
+	{
+		endentrega = conta.get("Shipping_Street") + "," + conta.get("Numero_de_Entrega");
+	}
+	if(conta.get("Complemento_de_entrega") != null)
+	{
+		endentrega = endentrega + " - " + conta.get("Complemento_de_entrega");
+	}
+	//tratar caracter especial
+	if(endentrega != null)
+	{
+		endentrega = zoho.encryption.base64Encode(endentrega);
+		responseEndEntrega = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + endentrega
+			type :GET
+		];
+		endentrega = responseEndEntrega.getJson("details").getJson("userMessage").get(0);
+	}
+	endentrega = if(endentrega.len() > 40,endentrega.substring(0,40),endentrega);
+	bairroentrega = ifnull(conta.get("Bairro_de_Entrega"),"");
+	if(bairroentrega != "")
+	{
+		bairroentrega = zoho.encryption.base64Encode(bairroentrega);
+		responseBairroEntrega = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + bairroentrega
+			type :GET
+		];
+		bairroentrega = responseBairroEntrega.getJson("details").getJson("userMessage").get(0);
+	}
+	bairroentrega = if(bairroentrega.len() > 40,bairroentrega.substring(0,40),bairroentrega);
+	cepcob = ifnull(conta.get("Billing_Code").replaceAll("[^a-zA-Z0-9]",""),"");
+	cepentrega = ifnull(conta.get("Shipping_Code").replaceAll("[^a-zA-Z0-9]",""),"");
+	muncob = ifnull(conta.get("Billing_City"),"");
+	if(muncob != null)
+	{
+		muncob = zoho.encryption.base64Encode(muncob);
+		responseMunCob = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + muncob
+			type :GET
+		];
+		muncob = responseMunCob.getJson("details").getJson("userMessage").get(0);
+	}
+	muncob = if(muncob.len() > 40,muncob.substring(0,40),muncob);
+	munentrega = ifnull(conta.get("Shipping_City"),"");
+	if(munentrega != null)
+	{
+		munentrega = zoho.encryption.base64Encode(munentrega);
+		responseMunEntrega = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + munentrega
+			type :GET
+		];
+		munentrega = responseMunEntrega.getJson("details").getJson("userMessage").get(0);
+	}
+	munentrega = if(munentrega.len() > 40,munentrega.substring(0,40),munentrega);
+	estadocob = ifnull(conta.get("UF"),"");
+	estadoentrega = ifnull(conta.get("UF_Entrega"),"");
+	bairrocob = ifnull(conta.get("Bairro_de_Cobran_a"),"");
+	if(bairrocob != null)
+	{
+		bairrocob = zoho.encryption.base64Encode(bairrocob);
+		responseBairroCob = invokeurl
+		[
+			url :"https://www.zohoapis.com/crm/v2/functions/retiraacentos/actions/execute?auth_type=apikey&zapikey=1003.8c62fe07091936b78682a6b243d89fd2.3c26e5921bb87954e33f828290d57ff6&palavra=" + bairrocob
+			type :GET
+		];
+		bairrocob = responseBairroCob.getJson("details").getJson("userMessage").get(0);
+	}
+	bairrocob = if(bairrocob.len() > 40,bairrocob.substring(0,40),bairrocob);
+	cnpjcpf = if(conta.get("CNPJ") != null,ifnull(conta.get("CNPJ").replaceAll("[^a-zA-Z0-9]",""),""),ifnull(conta.get("CPF").replaceAll("[^a-zA-Z0-9]",""),""));
+	inscrest = ifnull(conta.get("Inscri_o_Estadual"),"");
+	inscrest = if(inscrest.len() > 18,inscrest.substring(0,18),inscrest);
+	condicaoPagamento = conta.get("Condi_o_de_Pagamento");
+	if(condicaoPagamento != null)
+	{
+		condicaoPagamento = zoho.crm.getRecordById("Condi_o_de_Pagamento",conta.get("Condi_o_de_Pagamento").get("id"));
+		condpag = condicaoPagamento.get("Name");
+		condpag = if(condpag.len() > 3,inscrest.substring(0,3),condpag);
+	}
+	else
+	{
+		condpag = "";
+	}
+	clasven = ifnull(conta.get("Classificacao_de_Vendas"),"");
+	clasven = if(clasven.len() > 1,clasven.substring(0,1),clasven);
+	email = ifnull(conta.get("E_mail"),"");
+	grupoven = if(conta.get("Grupo_de_Vendas") != null,conta.get("Grupo_de_Vendas").getPrefix("-"),"");
+	codcanal = if(conta.get("C_digo_Canal") != null,conta.get("C_digo_Canal").getPrefix("-"),"");
+	bandeira = if(conta.get("C_digo_Bandeira") != null,conta.get("C_digo_Bandeira").getPrefix("-"),"");
+	responsavel = if(conta.get("C_digo_Respons_vel") != null,conta.get("C_digo_Respons_vel").getPrefix("-"),"");
+	clasregiao = if(conta.get("Clas_Regi_o") != null,conta.get("Clas_Regi_o").getPrefix("-"),"");
+	numagencia = "";
+	numconta = "";
+	//json para envio 
+	objCliente = {"razaosocial":razaosocial,"tppessoa":tppessoa,"nreduzido":nreduzido,"codrede":codrede,"rede":rede,"endereco":endereco,"tipocliente":tipocliente,"estado":estado,"municipio":municipio,"ddd":ddd,"bairro":bairro,"cep":cep,"telefone":telefone,"endcob":endcob,"endentrega":endentrega,"bairroentrega":bairroentrega,"cepentrega":cepentrega,"munentrega":munentrega,"estadoentrega":estadoentrega,"bairrocob":bairrocob,"cepcob":cepcob,"muncob":muncob,"estadocob":estadocob,"contato":contato,"cnpjcpf":cnpjcpf,"inscrest":inscrest,"condpag":condpag,"clasven":clasven,"email":email,"grupoven":grupoven,"codcanal":codcanal,"bandeira":bandeira,"responsavel":responsavel,"clasregiao":clasregiao,"numagencia":numagencia,"numconta":numconta};
+	//info objCliente;
+	//envio ERP
+	/*
+	responseTotvs = invokeurl
+	[
+		url :"http://totvs.queijosipanema.com.br:15012/REST/apicrmzoho/Customer"
+		type :POST
+		parameters:objCliente.toText()
+	];
+	*/
+	responseTotvs = postUrl("http://totvs.queijosipanema.com.br:15012/REST/apicrmzoho/Customer",objCliente);
+	//info objCliente;
+	info responseTotvs;
+	mensagem = "";
+	boolVal = responseTotvs.containKey("errorCode");
+	if(boolVal)
+	{
+		mensagem = responseTotvs.getJson("errorMessage");
+		Status = responseTotvs.getJson("errorCode").toString();
+		zoho.crm.updateRecord("Accounts",contaId,{"Status":Status,"Mensagem":mensagem});
+	}
+	else
+	{
+		mensagem = responseTotvs.getJson("message");
+		zoho.crm.updateRecord("Accounts",contaId,{"Status":"200","Mensagem":mensagem});
+	}
+	return mensagem;
+}
+else
+{
+	return "Cliente já foi integrado com ERP";
+}
