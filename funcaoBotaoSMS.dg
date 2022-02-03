@@ -1,5 +1,6 @@
 //4501870000000097075
 contato = zoho.crm.getRecordById("Contacts",contatoId);
+info contato;
 contatoMobile = contato.get("Mobile");
 contatoMsg = zoho.crm.getRelatedRecords("Mensagem_Enviada","Contacts",contatoId);
 info contatoMsg;
@@ -11,26 +12,25 @@ for each  item in contatoMsg
 	info mensagemId;
 	novaMensagemConteudo = mensagemConteudo.replaceAll(" ","%20");
 	info novaMensagemConteudo;
-		envio = invokeurl
+	envio = invokeurl
 	[
 		url :"https://api.smsdev.com.br/v1/send?key=ZJNZQRCOYQ8UPM5C623M2JLOMNIWUU3VDM8FMRTW2XY30BE7QA4GQOPL75VLLGKCCH9BEZ89Z2Q3U0WDYNDKITHLR4088E9FE7FFBNGQCVJLOLZ5S95491X4L9JMEIOD&type=9&number=" + contatoMobile + "&msg=" + novaMensagemConteudo
 		type :GET
 	];
 	info envio;
-	}
-	
+}
 status = envio.get("situacao");
 info status;
-
-if (status != null){
-	for each i in envio
-    {
-	statusMsg = Map();
-	statusMsg.put("Status_msg",status);
-	statusMsg.put("id",mensagemId);
-	info statusMsg;
-	statusCria = zoho.crm.updateRecord("mensagens",mensagemId,statusMsg);
-	info statusCria;
-    }
+if(status != null)
+{
+	for each  i in envio
+	{
+		statusMsg = Map();
+		statusMsg.put("Status_msg",status);
+		statusMsg.put("id",mensagemId);
+		info statusMsg;
+		statusCria = zoho.crm.updateRecord("mensagens",mensagemId,statusMsg);
+		info statusCria;
 	}
+}
 return status;
