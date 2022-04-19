@@ -1,0 +1,19 @@
+//5233104000000506074
+dados = zoho.crm.getRecords("Accounts");
+info dados;
+conta = zoho.crm.getRecordById("Accounts",contaId);
+cep = conta.get("Billing_Code");
+consulta = invokeurl
+[
+	url :"https://viacep.com.br/ws/" + cep + "/json/"
+	type :GET
+];
+rua = consulta.get("logradouro");
+cidade = consulta.get("localidade");
+estado = consulta.get("uf");
+mp = Map();
+mp.put("Billing_Street",rua);
+mp.put("Billing_City",cidade);
+mp.put("Billing_State",estado);
+atualizaendereco = zoho.crm.updateRecord("Accounts",contaId,mp);
+info atualizaendereco;
