@@ -1,4 +1,3 @@
-// 5232260000000555001
 lead = zoho.crm.getRecordById("Leads",leadID);
 mplead = Map();
 mplead.put("Mobile",lead.get("Mobile"));
