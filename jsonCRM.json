@@ -1,0 +1,29 @@
+{
+    "data": [
+        {
+            "Email": "daniel_vieira_rocha@hotmail.com",
+            "Website": null,
+            "Complemento": null,
+            "City": "Belo Horizonte",
+            "Mobile": null,
+            "First_Name": null,
+            "Last_Name": "Daniel_vieira_rocha",
+            "State": "Minas Gerais",
+            "asaasCustomer": null,
+            "Street": null,
+            "Country": "Brazil",
+            "Zip_Code": null,
+            "id": "1420404000092863001",
+            "cpfCnpj": null
+        }
+    ],
+    "info": {
+        "per_page": 1,
+        "next_page_token": "2b20bbc6d1775fc325b33e263e949db4b8f46a7cdc66f1d12f12c100346c0b553b17dd420a3d1d1c8f1a0553a4e1e494a79e3c1614b2ca5319d2fccf2431ca36ad93e4cbc6e2bb53fa035d1dacfb97b7e803f4cf4f0b0bfaab750da277cbf0f68d14861a8f0e40a1e723e566c75a987cc23e34e9ae22877bed2a6bdd05af8c54",
+        "count": 1,
+        "page": 1,
+        "previous_page_token": null,
+        "page_token_expiry": "2022-11-04T13:41:06-03:00",
+        "more_records": true
+    }
+}

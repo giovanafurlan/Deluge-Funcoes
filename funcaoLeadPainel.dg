@@ -1,0 +1,53 @@
+lead = zoho.crm.getRecordById("Leads",leadId);
+json = invokeurl
+[
+	url :"https://painel.webpeak.com.br/api/zoho/user-signedup"
+	type: "POST"
+	headers: { "Content-Type": "application/json" }
+	body: mp
+];
+address = json.get("address");
+
+address2 = address.get("address");
+city = address.get("city");
+complement = address.get("complement");
+country = address.get("country");
+postalCode = address.get("postalCode");
+province = address.get("province");
+state = address.get("state");
+asaasCustomer = json.get("asaasCustomer");
+cpfCnpj = json.get("cpfCnpj");
+dateRegister = json.get("displayName");
+displayNameLower = json.get("displayNameLower");
+email = json.get("email");
+emailLower = json.get("emailLower");
+firstName = json.get("firstName");
+fullName = json.get("fullName");
+lastName = json.get("lastName");
+miagration = json.get("miagration");
+photoUrl = json.get("photoUrl");
+role = json.get("role");
+id = json.get("id");
+webceoUser = json.get("webceoUser");
+website = json.get("website");
+whatsapp = json.get("whatsapp");
+
+mp = Map();
+mp.put("Street",address2);
+mp.put("City",city);
+mp.put("Complemento",complement);
+mp.put("Country",country);
+mp.put("Zip_Code",postalCode);
+mp.put("State",state);
+mp.put("asaasCustomer",asaasCustomer);
+mp.put("cpfCnpj",cpfCnpj);
+mp.put("Email",email);
+mp.put("Secondary_Email",emailLower);
+mp.put("First_Name",firstName);
+mp.put("Last_Name",lastName);
+mp.put("Website",website);
+mp.put("Mobile",whatsapp);
+
+criarlead= zoho.crm.updateRecord("Leads", leadId, mp);
+info criarlead;
+return "";
